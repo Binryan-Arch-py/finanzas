@@ -12,7 +12,8 @@ cursor.execute('''
     CREATE TABLE IF NOT EXISTS finanzas (
     id INTEGER PRIMARY KEY,
     fecha TEXT,
-    dinero REAL
+    dinero REAL,
+    descripcion TEXT
     )
 ''')
 while True:
@@ -24,7 +25,8 @@ while True:
             conf = input(f"ingresaste ${monto}, es correcto? (s/n) ")
             if conf == 's': break
         hoy = date.today()
-        cursor.execute("INSERT INTO finanzas (fecha, dinero) VALUES (?, ?)", (str(hoy), monto))
+        descripcion = input("ingresa la descripcion del gasto ")
+        cursor.execute("INSERT INTO finanzas (fecha, dinero, descripcion) VALUES (?, ?, ?)", (str(hoy), monto, descripcion))
         conexion.commit()
         print("movimiento registrado")
         salir = input("\nquieres salir del programa? (s/n) ")
