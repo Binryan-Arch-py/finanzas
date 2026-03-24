@@ -75,7 +75,6 @@ class Operaciones:
         fecha = date.today()
         descripcion = input("ingresa la descripcion del gasto: ")
         self.base.insertar(fecha, monto, descripcion)
-        print("movimiento registrado")
 
 
     def ver_todo(self):
@@ -129,6 +128,7 @@ def main(db, op):
         op.ver_mes()
     else:
         print("opcion no disponible")
+    db.cerrar()
 
 
 if __name__ == "__main__":
