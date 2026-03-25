@@ -2,6 +2,8 @@ import sqlite3
 from datetime import date
 import os
 import time
+import pandas as pd
+import re
 
 class Database:
     def __init__(self, carpeta):
@@ -56,6 +58,13 @@ class Database:
         self.cursor.execute("SELECT SUM(monto) FROM finanzas WHERE fecha >= ? AND fecha < ?", (str(inicio), str(fin)))
         total = self.cursor.fetchone()[0] or -0 
         return total
+
+
+    def excel(self):
+        data = pd.read_sql_query("SELECT * FROM finanzas", self.conexion)
+        for col in data.select_dtypes(include=['object']):
+            data[col] = data[col].apply(lambda x: re.sub(r'[\x00-\x1f\x7f-\x9f]', '', str(x)) if x else x)
+        data.to_excel('finanzas.xlsx', index=False, engine='openpyxl')
 
 
     def cerrar(self):
@@ -139,7 +148,7 @@ def main(db, op):
         print("~" * 40)
         print(f"\nBIENVENIDO A LA CALCULADORA DE FINANZAS {usuario}")
         print("\nque quieres hacer?")
-        print("\n1 = registrar movimiento \n2 = ver todos los movimientos \n3 = ver movimientos por fecha \n4 = ver movimientos por mes \n5 = ver total de un mes")
+        print("\n1 = registrar movimiento \n2 = ver todos los movimientos \n3 = ver movimientos por fecha \n4 = ver movimientos por mes \n5 = ver total de un mes \n6 = pasar datos a excel")
         print()
         print("~" * 40)
         modo = input("\n--> ")
@@ -157,6 +166,8 @@ def main(db, op):
             op.ver_mes()
         elif modo == '5':
             op.total_mes()
+        elif modo == '6':
+            db.excel()
         else:
             print("opcion no disponible")
         db.cerrar()
