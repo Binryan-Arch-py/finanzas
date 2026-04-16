@@ -17,7 +17,7 @@ Es un porgrama pensado para ayudar al usuario a gestionar su dinero guardando ls
 
 ## Tecnologias
 * **Lenguaje:** Python
-* **Sistema:** Arch Linux
+* **Sistema:** Arch Linux/Void Linux
 * **Editor:** Neovim
 
 ## Como ejecutar
