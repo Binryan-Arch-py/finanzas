@@ -1,4 +1,4 @@
-# COF 
+# <p align="center"> <img src="logo.png" width="100"> <br> **COF** </p>
 
 programa que ayuda a gestionar las finanzas del usuario registrando todos los movimintos financieros que realice
 
