@@ -6,7 +6,7 @@ programa que ayuda a gestionar las finanzas del usuario registrando todos los mo
 El acronimo *C.O.F.* significa **Control de Operaciones Financieras**
 
 ## Descripcion
-Es un porgrama pensado para ayudar al usuario a gestionar su dinero guardando lso movimientos economicos que realice el usuario guardandolos en una base de datos local y registrando la fecha, asi contando tambien con funciones para ver los moviientos realizados y pudiendo crear un archivo de excel para poder visualizar los datos de forma mas visual
+Es un porgrama pensado para ayudar al usuario a gestionar su dinero guardando los movimientos economicos que realice el usuario guardandolos en una base de datos local y registrando la fecha, asi contando tambien con funciones para ver los moviientos realizados y pudiendo crear un archivo de excel para poder visualizar los datos de forma mas visual
 
 ## Funciones
 * **SQLite** para la base de datos
