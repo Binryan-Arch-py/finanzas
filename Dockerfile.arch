@@ -11,5 +11,5 @@ RUN chmod +x script.sh && bash script.sh
 
 COPY cof.py .
 
-CMD ["/bin/bash", "-c", "source env/bin/activate && python3 cofd.py"]
+CMD ["/bin/bash", "-c", "source env/bin/activate && python3 cofb.py"]
 
