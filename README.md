@@ -21,21 +21,10 @@ Es un porgrama pensado para ayudar al usuario a gestionar su dinero guardando lo
 * **Editor:** Neovim
 
 ## Como ejecutar
-### instalar necesario:
-deberas tener instalado **python** **python-pip** y **python-devel** (en ocasiones ese ultimo suele venir junto con python), puedes instalarlos con estos comandos
-* **Arch** y derivados: ``sudo pacman -S python python-pip``
-* **Debian** y derivados: ``sudo apt install python3 python3-pip python3-venv``
-* **Fedora** y derivados: ``sudo dnf groupinstall "Development Tools" && sudo dnf install python3-devel``
-* **MacOS:** ``xcode-select --install``
-* **Windows:** descarga e instala python desde python.org
-### configuracion de entorno:
-ejecuta los siguientes comandos segun tu sistema:
-* ``python3 -m venv venv``
-* **Linux/MacOS:** ``source venv/bin/activate``
-* **Windows:** ``.\venv\Scripts\activate``
-### instalar dependencias
-pip install -r requirements.txt
-
+### instalar dependencias:
+para instalar lo necesario ejecuta los siguientes comandos dependiendo tu sistema
+* **Linux/MacOS:** ```source install.sh```
+* **Windows:** ```call install.bat```
 ### ejecutar:
 para ejecutar el programa solo ejecuta esto:
 python3 cof.py
