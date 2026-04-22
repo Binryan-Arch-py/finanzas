@@ -1,9 +1,11 @@
-FROM fedora:latest
+FROM ubuntu:latest
 
 WORKDIR /app
 
 COPY requirements.txt .
 COPY script.sh .
+
+RUN echo '#!/bin/sh\n"$@"' > /usr/bin/sudo && chmod +x /usr/bin/sudo
 
 RUN chmod +x script.sh && bash script.sh
 
