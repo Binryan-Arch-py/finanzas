@@ -27,10 +27,12 @@ para descargar este repositorio deberás tener instalado git y ejecutar el sigui
 ``cd cofb``
 ### instalar dependencias:
 para instalar lo necesario ejecuta los siguientes comandos dependiendo tu sistema
-* **Linux/MacOS:** ``chmod +x install.sh && source install.sh``
-* **Windows:** ``call install.bat``
+* **Linux/MacOS:** ``chmod +x install.sh && install.sh``
+* **Windows:** ``install.bat``
 ### ejecutar:
 para ejecutar el programa solo ejecuta esto:
-python3 cofb.py
+* **Linux/Macos:** ``source env/bin/activate``
+* **Windows:** ``call .\env\Scripts\activate``
+``python3 cofb.py``
 
 ## Desarrollado por *Bryan David Pérez Arana*
