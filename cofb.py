@@ -74,21 +74,22 @@ class Database:
             SET user = ? 
             WHERE id = 1 AND (user IS NULL OR user = '')
         """, (usuario,))
-        self.cursor.execute("""
-            INSERT OR IGNORE INTO finanzas (id, user)           VALUES (1, ?)
-        """, (usuario,))
+        self.cursor.execute("INSERT OR IGNORE INTO finanzas (id, user) VALUES (1, ?)", (usuario,))
         self.conexion.commit()
 
 
     def ver_usuario(self):
         self.cursor.execute("SELECT user FROM finanzas WHERE id = 1")
         usuario = self.cursor.fetchone()
-        return usuario
+        if usuario:
+            return usuario[0]
+        return ""
 
 
     def comp_usuario(self):
-        self.cursor.execute("SELECT 1 FROM finanzas WHERE id = 1 AND (user IS NULL OR user = '')")
-        if self.cursor.fetchone():
+        self.cursor.execute("SELECT 1 FROM finanzas WHERE id = 1")
+        resultado = self.cursor.fetchone()
+        if resultado is None or resultado[0] is None or resultado[0] == '':
             return True
         else:
             return False
