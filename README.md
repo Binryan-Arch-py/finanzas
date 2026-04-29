@@ -31,7 +31,7 @@ para descargar este repositorio deberás tener instalado git, puedes instalarlo 
 * **Android:** ``pkg install git``
 * **IOS:** ``apk add git``
 * **MacOS:** ``xcode-select --install``
-* **Windows:** abre terminal de administrador y ejecuta ``winget install --id Git.Git -e``
+* **Windows:** abre terminal de administrador y ejecuta ``winget install --id Git.Git -e --silent``
 * **Linux:** usa el gestor de paquetes de tu distribucion y descarga **git**
 luego ejecutar los siguientes comandos:
 ``git clone https://github.com/Binryan-Arch-py/cofb.git``
