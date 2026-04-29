@@ -128,7 +128,9 @@ class Operaciones:
                 anio = int(input("ingresa el anio \n--> "))
                 mes = int(input("ingresa el mes \nejemplo: 03 \n--> "))
             except ValueError:
-                print("ERROR, vuelve a intentarlo/n")
+                limpiar()
+                print("~" * 50)
+                print("ERROR, vuelve a intentarlo\n")
             else:
                 break
         inicio = date(anio, mes, 1)
