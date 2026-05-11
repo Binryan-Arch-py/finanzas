@@ -11,6 +11,8 @@ detectar_sudo() {
 detect_base() {
     if [[ "$OSTYPE" == "darwin"* ]]; then
         OS_BASE="macos"
+    elif [ -n "$TERMUX_VERSION" ]; then
+        OS_BASE="termux"
     elif [ -f /etc/os-release ]; then
         . /etc/os-release
         OS_BASE=$(echo "${ID_LIKE:-$ID}"  | tr '[:upper:]' '[:lower:]')
@@ -24,23 +26,27 @@ install_packages() {
     PAQUETES="python3 python3-pip python3-devel"
     case "$OS_BASE" in 
         *debian*)
-            PAQUETES="python3 python3-pip python3-venv"
+            PAQUETES="python3-dev python3 python3-pip python3-venv build-essential"
             $SUDO apt update && $SUDO apt install -y $PAQUETES
             ;;
         *arch*)
-            PAQUETES="python python-pip"
+            PAQUETES="python python-pip base-devel"
             $SUDO pacman -Sy --noconfirm $PAQUETES
             ;;
         *fedora*)
-            $SUDO dnf check-update && $SUDO dnf install -y $PAQUETES
+            $SUDO dnf check-update && $SUDO dnf install -y $PAQUETES && $SUDO dnf groupinstall "Development Tools"
             ;;
         *void*)
-            $SUDO xbps-install -Sy $PAQUETES
+            $SUDO xbps-install -Sy $PAQUETES base-devel
             ;;
         *alpine*)
-            PAQUETES="python3 python3-dev py3-pip"
+            PAQUETES="python3 python3-dev py3-pip build-base"
             $SUDO apk update && $SUDO apk add $PAQUETES
             $SUDO apk add --no-cache ca-certificates
+            ;;
+        *termux*)
+            PAQUETES="python python-dev build-essential clang"
+            pkg update && pkg install $PAQUETES
             ;;
         *macos*)
             echo "sistema MacOS detectado"
