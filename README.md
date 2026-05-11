@@ -33,7 +33,7 @@ para descargar este repositorio deberás tener instalado git, puedes instalarlo 
 * **MacOS:** ``xcode-select --install``
 * **Windows:** abre terminal de administrador y ejecuta ``winget install --id Git.Git -e --silent``
 * **Linux:** usa el gestor de paquetes de tu distribucion y descarga **git**
-luego ejecutar los siguientes comandos:
+* *en el sistema en el que estés ejecuta estos comandos:*
 ``git clone https://github.com/Binryan-void/cofb.git``
 ``cd cofb``
 ### instalar dependencias:
