@@ -34,11 +34,11 @@ para descargar este repositorio deberás tener instalado git, puedes instalarlo 
 * **Windows:** abre terminal de administrador y ejecuta ``winget install --id Git.Git -e --silent``
 * **Linux:** usa el gestor de paquetes de tu distribucion y descarga **git**
 luego ejecutar los siguientes comandos:
-``git clone https://github.com/Binryan-Arch-py/cofb.git``
+``git clone https://github.com/Binryan-void/cofb.git``
 ``cd cofb``
 ### instalar dependencias:
 para instalar lo necesario ejecuta los siguientes comandos dependiendo tu sistema
-* **Android/IOS/Linux/MacOS:** ``chmod +x install.sh && ./install.sh``
+* **Android/IOS/Linux/MacOS:** ``sh install.sh``
 * **Windows:** abre una terminal de administrador y ejecuta: ``.\install.bat``
 ### ejecutar:
 para ejecutar el programa solo ejecuta esto:
