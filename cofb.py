@@ -54,6 +54,7 @@ class Database:
         self.cursor.execute("INSERT INTO finanzas (fecha, monto, descripcion) VALUES (?, ?, ?)", (str(fecha), dinero, descripcion))
         self.conexion.commit()
 
+
     def ver_todos(self):
         self.cursor.execute("SELECT * FROM finanzas")
         filas = self.cursor.fetchall()
