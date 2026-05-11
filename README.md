@@ -42,7 +42,7 @@ para instalar lo necesario ejecuta los siguientes comandos dependiendo tu sistem
 * **Windows:** abre una terminal de administrador y ejecuta: ``.\install.bat``
 ### ejecutar:
 para ejecutar el programa solo ejecuta esto:
-* **Android/IOS/Linux/Macos:** ``source env/bin/activate && python3 cofb.py``
+* **Android/IOS/Linux/Macos:** ``. env/bin/activate && python3 cofb.py``
 * **Windows:** ``call .\env\Scripts\activate`` en **CMD** o ``.\env\Scripts\Activate.ps1`` en **PowerShell**
 * **Windows:** ``python cofb.py``
 

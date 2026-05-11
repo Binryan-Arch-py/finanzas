@@ -45,8 +45,8 @@ install_packages() {
             $SUDO apk add --no-cache ca-certificates
             ;;
         *termux*)
-            PAQUETES="python python-dev build-essential clang"
-            pkg update && pkg install $PAQUETES
+            PAQUETES="python python-pip build-essential clang"
+	    pkg update && pkg install -y $PAQUETES
             ;;
         *macos*)
             echo "sistema MacOS detectado"
@@ -63,7 +63,7 @@ install_packages() {
 
 dependencias() {
     echo "creando entrono virtual..."
-    python3 -m venv env && source env/bin/activate && echo "entorno virtual creado con exito" || { echo "error al crear entorno virtual"; exit 1; }
+    python3 -m venv env && . env/bin/activate && echo "entorno virtual creado con exito" || { echo "error al crear entorno virtual"; exit 1; }
     echo "instalando dependencias..."
     python3 -m pip install -r requirements.txt && echo "dependencias instaladas exitosamente" || { echo "error al instalar dependencias"; exit 1; }
 }
