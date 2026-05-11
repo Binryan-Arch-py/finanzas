@@ -5,9 +5,9 @@ WORKDIR /app
 COPY requirements.txt .
 COPY install.sh .
 
-RUN chmod +x script.sh && bash script.sh
+RUN sh install.sh
 
-COPY cof.py .
+COPY cofb.py .
 
-CMD ["/bin/bash", "-c", "source env/bin/activate && python3 cofb.py"]
+CMD ["/bin/sh", "-c", "source env/bin/activate && python3 cofb.py"]
 
