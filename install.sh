@@ -32,6 +32,7 @@ install_packages() {
             PAQUETES="python3 python3-dev py3-pip"
             sudo apk update && sudo apk add $PAQUETES
             sudo apk add --no-cache ca-certificates
+            ;;
         *macos*)
             echo "sistema MacOS detectado"
             echo "instalando paquetes..."
