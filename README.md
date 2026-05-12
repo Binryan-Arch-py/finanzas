@@ -24,7 +24,9 @@ Es un porgrama pensado para ayudar al usuario a gestionar su dinero guardando lo
 ## Como ejecutar
 ### Movil:
 si te gustaria utilizar el programa en un dispositivo movil (Android o Iphone) sigue los siguientes pasos:
-* instala el programa **Termux** en **Android** o **ISH Shell** en **Iphone**
+- instala el programa **Termux** en **Android** o **ISH Shell** en **Iphone**
+    * puedes instalar **Termux** haciendo click [aquí](https://f-droid.org/repo/com.termux_1022.apk)
+    * puedes descargar **ISH Shell** desde la **App Store**
 * ejecuta ``pkg update`` en **Termux** y ``apk update`` en **ISH Shell**
 ### descargar repositorio:
 para descargar este repositorio deberás tener instalado git, puedes instalarlo asi:
