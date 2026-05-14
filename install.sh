@@ -26,21 +26,23 @@ install_packages() {
     PAQUETES="python3 python3-pip python3-devel"
     case "$OS_BASE" in 
         *debian*)
-            PAQUETES="python3-dev python3 python3-pip python3-venv build-essential"
+            PAQUETES="python3-dev python3 python3-pip python3-venv build-essential python3-tk"
             $SUDO apt update && $SUDO apt install -y $PAQUETES
             ;;
         *arch*)
-            PAQUETES="python python-pip base-devel"
+            PAQUETES="python python-pip base-devel tk"
             $SUDO pacman -Sy --noconfirm $PAQUETES
             ;;
         *fedora*)
+            PAQUETES="$PAQUETES python3-tkinter"
             $SUDO dnf check-update && $SUDO dnf install -y $PAQUETES && $SUDO dnf groupinstall "Development Tools"
             ;;
         *void*)
-            $SUDO xbps-install -Sy $PAQUETES base-devel
+            PAQUETES="$PAQUETES base-devel python3-tkinter"
+            $SUDO xbps-install -Sy $PAQUETES 
             ;;
         *alpine*)
-            PAQUETES="python3 python3-dev py3-pip build-base"
+            PAQUETES="python3 python3-dev py3-pip build-base python3-tkinter"
             $SUDO apk update && $SUDO apk add $PAQUETES
             $SUDO apk add --no-cache ca-certificates
             ;;
@@ -51,7 +53,10 @@ install_packages() {
         *macos*)
             echo "sistema MacOS detectado"
             echo "instalando paquetes..."
-            xcode-select --install
+            xcode-select --install 2>/dev/null
+            curl -O https://www.python.org/ftp/python/3.12.3/python-3.12.3-macos11.pkg
+            sudo installer -pkg python-3.12.3-macos11.pkg -target / 
+            "/Applications/Python 3.12/Install Certificates.command"
             curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3 get-pip.py
             ;;
         *)
