@@ -51,8 +51,15 @@ class Database:
 
 
     def insertar(self, fecha, dinero, descripcion):
-        self.cursor.execute("INSERT INTO finanzas (fecha, monto, descripcion) VALUES (?, ?, ?)", (str(fecha), dinero, descripcion))
-        self.conexion.commit()
+        if not isinstance(fecha, date) or not isinstance(dinero, float) or not isinstance(descripcion, str):
+            raise ValueError("El formato de los datos es incorrecto")
+        
+        try:
+            self.cursor.execute("INSERT INTO finanzas (fecha, monto, descripcion) VALUES (?, ?, ?)", (str(fecha), dinero, descripcion))
+            self.conexion.commit()
+        except sqlite3.IntegrityError as e:
+            print(e)
+            raise ValueError("Ya existe un registro con esa fecha")
 
 
     def ver_todos(self):
@@ -92,7 +99,6 @@ class Database:
             SET user = ? 
             WHERE id = 1
         """, (usuario,))
-        self.cursor.execute("INSERT OR IGNORE INTO finanzas (id, user) VALUES (1, ?)", (usuario,))
         self.conexion.commit()
 
 
@@ -133,7 +139,21 @@ class Operaciones:
                 print("~" * 50)
                 print("ERROR, vuelve a intentarlo\n")
             else:
-                break
+                if mes > 12 or mes < 1:
+                    limpiar()
+                    print(f"ERROR, ingresaste el mes {mes}")
+                    print("ingresa solo numeros del 1 al 12")
+                    time.sleep(1.2)
+                    continue
+                elif not (str(mes)[0] == '0' or str(mes)[0] == '1'):
+                    limpiar()
+                    print(f"ERROR, ingresaste: {mes}")
+                    print("ingresa el mes con el formato solicitado")
+                    print("01-12")
+                    time.sleep(1.2)
+                    continue
+                else:
+                    break
         inicio = date(anio, mes, 1)
         if mes == 12:
             fin = date(anio + 1, 1, 1)
@@ -151,10 +171,12 @@ class Operaciones:
                     print("ERROR, ingresa solo numeros")
                 else:
                     break
-            confirm = input(f"ingresaste ${monto}, es correcto? (s/n) ")
+            confirmacion = input(f"ingresaste ${monto}, es correcto? (s/n) ")
             print()
-            if confirm == 's':
+            if confirmacion == 's':
                 break
+            else:
+                limpiar()
         fecha = date.today()
         descripcion = input("ingresa la descripcion del gasto: \n--> ")
         self.base.insertar(fecha, monto, descripcion)
@@ -168,6 +190,12 @@ class Operaciones:
 
     def ver_fecha(self):
         dia = input("ingresa la fecha de la que quieres conocer los movimientos \nejemplo: 2026-03-21 \n--> ")
+        try:
+            date.fromisoformat(dia)
+        except ValueError:
+            print("Fecha o formato incorrecto")
+            return []
+        
         filas = self.base.ver_fechas(dia)
         for fila in filas:
             print(fila)
@@ -175,6 +203,13 @@ class Operaciones:
 
     def ver_mes(self):
         inicio, fin = Operaciones.fechas()
+        try:
+            date.fromisoformat(inicio)
+            date.fromisoformat(fin)
+        except ValueError:
+            print("Fecha incorrecta")
+            return []
+        
         filas = self.base.ver_meses(inicio, fin)
         for fila in filas:
             print(fila)
@@ -182,6 +217,13 @@ class Operaciones:
 
     def total_mes(self):
         inicio, fin = Operaciones.fechas()
+        try:
+            date.fromisoformat(str(inicio))
+            date.fromisoformat(str(fin))
+        except ValueError:
+            print("Fecha incorrecta")
+            return 0
+        
         total = self.base.mes_total(inicio, fin)
         print(f"${total}")
 
@@ -255,6 +297,8 @@ def main(db, op):
 
 
 if __name__ == "__main__":
+    base_datos = Database('db')
+    operacion = Operaciones(base_datos)
     base_datos.conectar()
     main(base_datos, operacion)
     base_datos.cerrar()
