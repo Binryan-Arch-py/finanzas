@@ -183,12 +183,6 @@ class Operaciones:
 
     def ver_fecha(self):
         dia = input("ingresa la fecha de la que quieres conocer los movimientos \nejemplo: 2026-03-21 \n--> ")
-        try:
-            date.fromisoformat(dia)
-        except ValueError:
-            print("Fecha o formato incorrecto")
-            return []
-        
         filas = self.base.ver_fechas(dia)
         for fila in filas:
             print(fila)
@@ -196,13 +190,6 @@ class Operaciones:
 
     def ver_mes(self):
         inicio, fin = Operaciones.fechas()
-        try:
-            date.fromisoformat(inicio)
-            date.fromisoformat(fin)
-        except ValueError:
-            print("Fecha incorrecta")
-            return []
-        
         filas = self.base.ver_meses(inicio, fin)
         for fila in filas:
             print(fila)
@@ -210,13 +197,6 @@ class Operaciones:
 
     def total_mes(self):
         inicio, fin = Operaciones.fechas()
-        try:
-            date.fromisoformat(str(inicio))
-            date.fromisoformat(str(fin))
-        except ValueError:
-            print("Fecha incorrecta")
-            return 0
-        
         total = self.base.mes_total(inicio, fin)
         print(f"${total}")
 
