@@ -211,8 +211,6 @@ class Operaciones:
         print("para ver los cambios vuelva a iniciar el programa")
 
 
-base_datos = Database('db')
-operacion = Operaciones(base_datos)
 def limpiar():
     if os.name == 'nt':
         os.system('cls')
