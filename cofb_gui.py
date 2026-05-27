@@ -282,3 +282,34 @@ class Ventana:
             datos.pack(pady=10)
         volver_menu = tk.Button(self.root, text="Continuar", command=volver)
         volver_menu.pack(side=tk.BOTTOM, pady=(50, 10), padx=(40, 5))
+
+
+    def ver_fecha(self):
+        menubar = tk.Menu(self.root)
+        self.root.config(menu=menubar)
+        menj = tk.Menu(menubar, tearoff=0)
+        menjbar.add_cascade(label="Ver Movimientos Por Fecha", menu=menu)
+
+        pedir_fecha = tk.Label(self.root, text="Ingresa la fecha de la que quieres los movimientos", font=("Arial", 12))
+        pedir_fecha.pack(pady=10)
+        ejemplo = tk.Label(self.root, text="Ejemplo: 2026-06-4", font=("Arial", 12))
+        ejemplo.pack(pady=10)
+        self.fecha = tk.Entry(self.root)
+        self.fecha.pack(pady=10)
+        self.enviar = tk.Button(self.root, text="Enviar", command=self.datos)
+        self.enviar.pack(pady=(10))
+
+
+    def datos(self):
+        self.continuar.set(False)
+        def volver():
+            self.continuar.set(True)
+    
+        self.enviar.destroy()
+        fecha = self.fecha.get().strip()
+        filas = self.db.ver_fechas(fecha)
+        for fila in filas:
+            dato = tk.Label(self.root, text=fila, font=("Arial", 12))
+            dato.pack(pady=10)
+        volver_menu = tk.Button(self.root, text="Continuar", command=volver)
+        volver_menu.pack(side=tk.BOTTOM, pady=(50, 10), padx=(40, 5))
