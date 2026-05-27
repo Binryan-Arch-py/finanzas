@@ -287,8 +287,8 @@ class Ventana:
     def ver_fecha(self):
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
-        menj = tk.Menu(menubar, tearoff=0)
-        menjbar.add_cascade(label="Ver Movimientos Por Fecha", menu=menu)
+        menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Ver Movimientos Por Fecha", menu=menu)
 
         pedir_fecha = tk.Label(self.root, text="Ingresa la fecha de la que quieres los movimientos", font=("Arial", 12))
         pedir_fecha.pack(pady=10)
@@ -296,11 +296,11 @@ class Ventana:
         ejemplo.pack(pady=10)
         self.fecha = tk.Entry(self.root)
         self.fecha.pack(pady=10)
-        self.enviar = tk.Button(self.root, text="Enviar", command=self.datos)
+        self.enviar = tk.Button(self.root, text="Enviar", command=self.datos_fecha)
         self.enviar.pack(pady=(10))
 
 
-    def datos(self):
+    def datos_fecha(self):
         self.continuar.set(False)
         def volver():
             self.continuar.set(True)
@@ -313,3 +313,16 @@ class Ventana:
             dato.pack(pady=10)
         volver_menu = tk.Button(self.root, text="Continuar", command=volver)
         volver_menu.pack(side=tk.BOTTOM, pady=(50, 10), padx=(40, 5))
+
+
+    def ver_mes(self):
+        menubar = tk.Menu(self.root)
+        self.root.config(menu=menubar)
+        menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Ver Movimientos PorMes", menu=menu)
+
+        anio_text = tk.Label(self.root, text="Ingresa el anio", font=("Arial", 12))
+        anio_text.pack(pady=10)
+        self.anio = tk.Entry(self.root)
+        self.anio.pack(pady=10)
+        mes
