@@ -325,4 +325,16 @@ class Ventana:
         anio_text.pack(pady=10)
         self.anio = tk.Entry(self.root)
         self.anio.pack(pady=10)
-        mes
+        mes_text = tk.Label(self.root, text="Ingresa el mes \nEjemplo: 05", font=("Arial", 12))
+        mes_text.pack(pady=10)
+        self.mes = tk.Entry(self.root)
+        self.mes.pack(pady=10)
+
+        self.enviar = tk.Button(self.root, text="Enviar", command=self.datos_mes)
+        self.enviar.pack(pady=10)
+
+
+    def datos_mes(self):
+        if self.mes.get().strip() > 12 or self.mes.get().strip() < 1:
+            messagebox.showerror("Error", f"Ingresaste {self.mes.get()} \nIngresa solo numeros entre 1 y 12")
+            self.ver_mes()
