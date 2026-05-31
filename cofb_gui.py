@@ -61,7 +61,7 @@ class Database:
         try:
             self.cursor.execute("INSERT INTO finanzas (fecha, monto, descripcion) VALUES (?, ?, ?)", (str(fecha), dinero, descripcion))
             self.conexion.commit()
-            messagebox.showerror("Exito", "Movimiento registrado exitosamente")
+            messagebox.showinfo("Exito", "Movimiento registrado exitosamente")
         except sqlite3.IntegrityError as e:
             messagebox.showerror("Error de Duplicado", f"Ocurrio un error de duplicado de los datos \nEl error es {e}")
 
@@ -94,6 +94,7 @@ class Database:
         for col in data.select_dtypes(include=['object']):
             data[col] = data[col].apply(lambda x: re.sub(r'[\x00-\x1f\x7f-\x9f]', '', str(x)) if x else x)
         data.to_excel('finanzas.xlsx', index=False, engine='openpyxl')
+        messagebox.showinfo("Exito", "El archivo se ha creado exitosamente")
 
 
     def usuario(self, usuario):
@@ -133,6 +134,26 @@ class Ventana:
         self.root = self.root()
         self.seleccion = None
         self.continuar = tk.BooleanVar(value=False)
+
+
+    @staticmethod
+    def fechas(anio, mes, boton):
+        try:
+            anio = int(anio) 
+            mes = int(mes)
+        except ValueError:
+            messagebox.showerror("Error", "Ingresa solo numeros enteros \nVuelve a intentarlo")
+        else:
+            if mes > 12 or mes < 1:
+                messagebox.showerror("Error", f"Ingresaste {mes} \nIngresa solo numeros entre 1 y 12")
+            else:
+                boton.destroy()
+                inicio = date(anio, mes, 1)
+                if mes == 12:
+                    fin = date(anio + 1, 1, 1)
+                else:
+                    fin = date(anio, mes + 1, 1)
+                return inicio, fin
 
 
     def root(self):
@@ -264,7 +285,6 @@ class Ventana:
         self.db.insertar(hoy, monto, descripcion)
         volver_menu = tk.Button(self.root, text="Continuar", command=volver)
         volver_menu.pack(side=tk.BOTTOM, pady=(50, 10), padx=(40, 5))
-        # funcion de limpiar pantalla cunado este
 
 
     def ver_todo(self):
@@ -319,7 +339,7 @@ class Ventana:
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
         menu = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Ver Movimientos PorMes", menu=menu)
+        menubar.add_cascade(label="Ver Movimientos Por Mes", menu=menu)
 
         anio_text = tk.Label(self.root, text="Ingresa el anio", font=("Arial", 12))
         anio_text.pack(pady=10)
@@ -335,6 +355,86 @@ class Ventana:
 
 
     def datos_mes(self):
-        if self.mes.get().strip() > 12 or self.mes.get().strip() < 1:
-            messagebox.showerror("Error", f"Ingresaste {self.mes.get()} \nIngresa solo numeros entre 1 y 12")
-            self.ver_mes()
+        self.continuar.set(False)
+        def volver():
+            self.continuar.set(True)
+
+        inicio, fin = Ventana.fechas(self.anio.get().strip(), self.mes.get().strip(), self.enviar)
+        filas = self.db.ver_meses(inicio, fin)
+        for fila in filas:
+            dato = tk.Label(self.root, text=fila, font=("Arial", 12))
+            dato.pack(pady=10)
+
+        volver_menu = tk.Button(self.root, text="Continuar", command=volver)
+        volver_menu.pack(side=tk.BOTTOM, pady=(50, 10), padx=(40, 5))
+
+
+    def total_mes(self):
+        menubar = tk.Menu(self.root)
+        self.root.config(menu=menubar)
+        menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Ver Total De Un Mes", menu=menu)
+
+
+        anio_text = tk.Label(self.root, text="Ingresa el anio", font=("Arial", 12))
+        anio_text.pack(pady=10)
+        self.anio = tk.Entry(self.root)
+        self.anio.pack(pady=10)
+        mes_text = tk.Label(self.root, text="Ingresa el mes \nEjemplo: 05", font=("Arial", 12))
+        mes_text.pack(pady=10)
+        self.mes = tk.Entry(self.root)
+        self.mes.pack(pady=10)
+
+        self.enviar = tk.Button(self.root, text="Enviar", command=self.datos_total)
+        self.enviar.pack(pady=10)
+
+
+    def datos_total(self):
+        self.continuar.set(False)
+        def volver():
+            self.continuar.set(True)
+
+        inicio,  fin = Ventana.fechas(self.anio.get().strip(), self.mes.get().strip(), self.enviar)
+        total = self.db.mes_total(inicio, fin)
+        dato = tk.Label(self.root, text=total, font=("Arial", 12))
+        dato.pack(pady=10)
+        volver_menu = tk.Button(self.root, text="Continuar", command=volver)
+        volver_menu.pack(side=tk.BOTTOM, pady=(50, 10), padx=(40, 5))
+
+
+    def excel(self):
+        menubar = tk.Menu(self.root)
+        self.root.config(menu=menubar)
+        menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Pasar Datos A Excel", menu=menu)
+
+        self.continuar.set(False)
+        def volver():
+            self.continuar.set(True)
+
+        def conectar_excel():
+            self.db.excel()
+            messagebox.showinfo("Exito", "Se ha creado el archivo de excel exitosamente")
+            self.continuar.set(True)
+
+        preguntar = tk.Label(self.root, text="Quieres Pasar Los Datos A Excel?", font=("Arial", 12))
+        preguntar.pack(pady=10)
+        volver_menu = tk.Button(self.root, text="Volver", command=volver)
+        volver_menu.grid(row=0, column=0, pady=10, padx=10)
+        crear_excel = tk.Button(self.root, text="Crear Excel", command=conectar_excel)
+        crear_excel.grid(row=0, column=1, pady=10, padx=10)
+
+
+    def usuario(self):
+        menubar = tk.Menu(self.root)
+        self.root.config(menu=menubar)
+        menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Cambiar Usuario", menu=menu)
+
+        self.continuar.set(False)
+        def volver():
+            self.continuar.set(True)
+
+        usuario = tk.Label(self.root, text=f"tu usuario actual es {self.db.ver_usuario()}", font("Arial", 12))
+        usuario.pack(pady=10)
+        preguntar = tk.Label(self.root, text="Quieres cambiarlo?", font=("Arial", 12))
