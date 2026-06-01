@@ -104,6 +104,7 @@ class Database:
             WHERE id = 1
         """, (usuario,))
         self.conexion.commit()
+        messagebox.showinfo("Exito", f"Se ha cambiado el usuario a {usuario} exitosamente")
 
 
     def ver_usuario(self):
@@ -219,6 +220,8 @@ class Ventana:
 
 
     def movimiento(self):
+        self.continuar.set(False)
+        
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
         menu = tk.Menu(menubar, tearoff=0)
@@ -273,7 +276,6 @@ class Ventana:
 
 
     def mov_registrar(self):
-        self.continuar.set(False)
         def volver():
             self.continuar.set(True)
 
@@ -305,6 +307,8 @@ class Ventana:
 
 
     def ver_fecha(self):
+        self.continuar.set(False)
+
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
         menu = tk.Menu(menubar, tearoff=0)
@@ -321,7 +325,6 @@ class Ventana:
 
 
     def datos_fecha(self):
-        self.continuar.set(False)
         def volver():
             self.continuar.set(True)
     
@@ -336,6 +339,8 @@ class Ventana:
 
 
     def ver_mes(self):
+        self.continuar.set(False)
+
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
         menu = tk.Menu(menubar, tearoff=0)
@@ -355,7 +360,6 @@ class Ventana:
 
 
     def datos_mes(self):
-        self.continuar.set(False)
         def volver():
             self.continuar.set(True)
 
@@ -370,6 +374,8 @@ class Ventana:
 
 
     def total_mes(self):
+        self.continuar.set(False)
+
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
         menu = tk.Menu(menubar, tearoff=0)
@@ -390,7 +396,6 @@ class Ventana:
 
 
     def datos_total(self):
-        self.continuar.set(False)
         def volver():
             self.continuar.set(True)
 
@@ -438,3 +443,44 @@ class Ventana:
         usuario = tk.Label(self.root, text=f"tu usuario actual es {self.db.ver_usuario()}", font("Arial", 12))
         usuario.pack(pady=10)
         preguntar = tk.Label(self.root, text="Quieres cambiarlo?", font=("Arial", 12))
+        preguntar.pack(pady=10)
+        self.si = tk.Button(self.root, text="Si", command=self.usr_cambiar)
+        self.si.grid(row=0, column=1, pady=10, padx=10)
+        self.no = tk.Button(self.root, text="No", command=volver)
+        self.no.grid(row=0, column=1, pady=10, padx=10)
+
+
+    def usr_cambiar(self):
+        self.si.destroy()
+        self.no.destroy()
+        
+        pedir_usr = tk.Label(self.root, text="Ingresa tu nuevo usuario", font=("Arial", 12))
+        pedir_usr.pack(pady=10)
+        self.user = tk.Entry(self.root)
+        self.user.pack(pady=10)
+        self.enviar = tk.Button(self.root, text="Enviar", comand=self.usr_guardar)
+        self.enviar.pack(pady=10)
+
+
+    def usr_guardar(self):
+        self.enviar.destroy()
+        user = self.user.get().strip()
+        self.db.usuario(user)
+        self.continuar.set(True)
+
+
+    def salir(self):
+        self.root.destroy()
+        
+
+    def obtener_user(self):
+        menubar = tk.Menu(self.root)
+        self.root.config(menu=menubar)
+        menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="", menu=menu)
+
+
+
+def main(base, gui):
+    if base.comp_usuario():
+        
