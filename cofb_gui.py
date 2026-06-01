@@ -85,7 +85,8 @@ class Database:
 
     def mes_total(self, inicio, fin):
         self.cursor.execute("SELECT SUM(monto) FROM finanzas WHERE fecha >= ? AND fecha < ?", (str(inicio), str(fin)))
-        total = self.cursor.fetchone()[0] or -0 
+        total_res = self.cursor.fetchone()[0] or -0 
+        total = total_res if total_res is not None else 0.0
         return total
 
 
@@ -104,7 +105,7 @@ class Database:
             WHERE id = 1
         """, (usuario,))
         self.conexion.commit()
-        messagebox.showinfo("Exito", f"Se ha cambiado el usuario a {usuario} exitosamente")
+        messagebox.showinfo("Exito", f"Se ha guardado el nombre de usuario \nTu usuario es {usuario}")
 
 
     def ver_usuario(self):
@@ -129,10 +130,9 @@ class Database:
 
 
 class Ventana:
-    def __init__(self, operaciones, base_datos):
-        self.op = operaciones 
+    def __init__(self, base_datos): 
         self.db = base_datos
-        self.root = self.root()
+        self.root = self.obtener_root()
         self.seleccion = None
         self.continuar = tk.BooleanVar(value=False)
 
@@ -157,16 +157,27 @@ class Ventana:
                 return inicio, fin
 
 
-    def root(self):
+    def obtener_root(self):
         root = tk.Tk()
         root.title("Control de Operaciones Financieras Basicas")
         root.geometry("400x250")
         return root
 
 
+    def regresar(self):
+        self.root.wait_variable(self.continuar)
+
+
+    def limpiar_pantalla(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+        self.root.config(menu="")
+
+
     def menu(self):
         self.esperar = tk.BooleanVar(value=False)
         self.seleccion = (None)
+        self.limpiar_pantalla()
 
         def devolver_seleccion():
             self.seleccion = seleccion.get()
@@ -195,13 +206,12 @@ class Ventana:
         seleccion = tk.StringVar(value="1")
 
         for indice, opcion in enumerate(opciones):
-            indice += 1 
             if opcion != "salir":
                 radio = tk.Radiobutton(
                     self.root,
                     text=opcion,
                     variable=seleccion,
-                    value=str(indice),
+                    value=str(indice + 1),
                 )
             else:
                 radio = tk.Radiobutton(
@@ -210,7 +220,7 @@ class Ventana:
                     variable=seleccion,
                     value="0" 
                 )
-        radio.pack(anchor=tk.W, padx=20, pady=10)
+            radio.pack(anchor=tk.W, padx=20, pady=10)
 
         tk.Frame(self.root, height=10).pack()
         boton = tk.Button(self.root, text="Aceptar", command=devolver_seleccion)
@@ -221,6 +231,7 @@ class Ventana:
 
     def movimiento(self):
         self.continuar.set(False)
+        self.limpiar_pantalla()
         
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
@@ -230,11 +241,7 @@ class Ventana:
 
         
     def mov_monto(self):
-        for widget in self.root.winfo_children():
-            if widget.winfo_name() == "menu":
-                continue
-            else:
-                widget.destroy()
+        self.limpiar_pantalla()
         
         def validar_monto():
             try:
@@ -259,9 +266,9 @@ class Ventana:
         confirmacion = tk.Label(self.root, text=f"Ingresaste {self.monto.get()}", font=("Arial", 12))
         confirmacion.pack(pady=10)
         self.aceptar = tk.Button(self.root, text="Aceptar", command=self.mov_descripcion)
-        self.aceptar.grid(row=0, column=0, padx=10, pady=10)
+        self.aceptar.pack(side="left", padx=10, pady=10)
         self.volver = tk.Button(self.root, text="Volver", command=self.mov_monto)
-        self.volver.grid(row=0, column=1, padx=10, pady=10)
+        self.volver.pack(side="left", padx=10, pady=10)
 
 
     def mov_descripcion(self):
@@ -273,6 +280,7 @@ class Ventana:
         self.descripcion = tk.Entry(self.root)
         self.descripcion.pack(pady=10)
         self.enviar = tk.Button(self.root, text="Enviar", command=self.mov_registrar)
+        self.enviar.pack(pady=10)
 
 
     def mov_registrar(self):
@@ -290,6 +298,7 @@ class Ventana:
 
 
     def ver_todo(self):
+        self.limpiar_pantalla()
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
         menu = tk.Menu(menubar, tearoff=0)
@@ -307,6 +316,7 @@ class Ventana:
 
 
     def ver_fecha(self):
+        self.limpiar_pantalla()
         self.continuar.set(False)
 
         menubar = tk.Menu(self.root)
@@ -325,6 +335,7 @@ class Ventana:
 
 
     def datos_fecha(self):
+        self.limpiar_pantalla()
         def volver():
             self.continuar.set(True)
     
@@ -339,6 +350,7 @@ class Ventana:
 
 
     def ver_mes(self):
+        self.limpiar_pantalla()
         self.continuar.set(False)
 
         menubar = tk.Menu(self.root)
@@ -360,6 +372,7 @@ class Ventana:
 
 
     def datos_mes(self):
+        self.limpiar_pantalla()
         def volver():
             self.continuar.set(True)
 
@@ -374,6 +387,7 @@ class Ventana:
 
 
     def total_mes(self):
+        self.limpiar_pantalla()
         self.continuar.set(False)
 
         menubar = tk.Menu(self.root)
@@ -408,6 +422,7 @@ class Ventana:
 
 
     def excel(self):
+        self.limpiar_pantalla()
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
         menu = tk.Menu(menubar, tearoff=0)
@@ -425,12 +440,13 @@ class Ventana:
         preguntar = tk.Label(self.root, text="Quieres Pasar Los Datos A Excel?", font=("Arial", 12))
         preguntar.pack(pady=10)
         volver_menu = tk.Button(self.root, text="Volver", command=volver)
-        volver_menu.grid(row=0, column=0, pady=10, padx=10)
+        volver_menu.pack(side="left", pady=10, padx=10)
         crear_excel = tk.Button(self.root, text="Crear Excel", command=conectar_excel)
-        crear_excel.grid(row=0, column=1, pady=10, padx=10)
+        crear_excel.pack(side="left", pady=10, padx=10)
 
 
-    def usuario(self):
+    def cambiar_usuario(self):
+        self.limpiar_pantalla()
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
         menu = tk.Menu(menubar, tearoff=0)
@@ -440,14 +456,14 @@ class Ventana:
         def volver():
             self.continuar.set(True)
 
-        usuario = tk.Label(self.root, text=f"tu usuario actual es {self.db.ver_usuario()}", font("Arial", 12))
+        usuario = tk.Label(self.root, text=f"tu usuario actual es {self.db.ver_usuario()}", font=("Arial", 12))
         usuario.pack(pady=10)
         preguntar = tk.Label(self.root, text="Quieres cambiarlo?", font=("Arial", 12))
         preguntar.pack(pady=10)
         self.si = tk.Button(self.root, text="Si", command=self.usr_cambiar)
-        self.si.grid(row=0, column=1, pady=10, padx=10)
+        self.si.pack(side="left", pady=10, padx=10)
         self.no = tk.Button(self.root, text="No", command=volver)
-        self.no.grid(row=0, column=1, pady=10, padx=10)
+        self.no.pack(side="left", pady=10, padx=10)
 
 
     def usr_cambiar(self):
@@ -458,7 +474,7 @@ class Ventana:
         pedir_usr.pack(pady=10)
         self.user = tk.Entry(self.root)
         self.user.pack(pady=10)
-        self.enviar = tk.Button(self.root, text="Enviar", comand=self.usr_guardar)
+        self.enviar = tk.Button(self.root, text="Enviar", command=self.usr_guardar)
         self.enviar.pack(pady=10)
 
 
@@ -470,7 +486,12 @@ class Ventana:
 
 
     def salir(self):
+        self.db.cerrar()
         self.root.destroy()
+
+
+    def iniciar(self):
+        self.root.mainloop()
         
 
     def obtener_user(self):
@@ -478,9 +499,61 @@ class Ventana:
         self.root.config(menu=menubar)
         menu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label="", menu=menu)
+        self.continuar.set(False)
+
+        pedir_usuario = tk.Label(self.root, text="ingresa tu nombre de usuario", font=("Arial", 12))
+        pedir_usuario.pack(pady=10)
+        self.user = tk.Entry(self.root)
+        self.user.pack(pady=10)
+        self.aceptar = tk.Button(self.root, text="Aceptar", command=self.obt_usr_guardar)
+        self.aceptar.pack(pady=10)
+        self.regresar()
 
 
-
-def main(base, gui):
-    if base.comp_usuario():
+    def obt_usr_guardar(self):
+        self.aceptar.destroy()
+        user = self.user.get().strip()
+        self.db.usuario(user)
+        self.continuar.set(True)
         
+
+def main(base, vn):
+    if base.comp_usuario():
+       vn.obtener_user()
+
+    while True:
+        seleccion = vn.menu()
+        if seleccion == "1":
+            vn.movimiento()
+            vn.regresar()
+        elif seleccion == "2":
+            vn.ver_todo()
+            vn.regresar()
+        elif seleccion == "3":
+            vn.ver_fecha()
+            vn.regresar()
+        elif seleccion == "4":
+            vn.ver_mes()
+            vn.regresar()
+        elif seleccion == "5":
+            vn.total_mes()
+            vn.regresar()
+        elif seleccion == "6":
+            vn.excel()
+            vn.regresar()
+        elif seleccion == "7":
+            vn.cambiar_usuario()
+            vn.regresar()
+        elif seleccion == "0":
+            vn.salir()
+        else:
+            messagebox.showerror("ERROR", "Ocurrio Un Error Inesperado")
+
+
+if __name__ == "__main__":
+    base_datos = Database('db')
+    interfaz = Ventana(base_datos)
+    base_datos.conectar()
+    interfaz.root.after(100, lambda: main(base_datos, interfaz))
+    interfaz.iniciar()
+    base_datos.cerrar()
